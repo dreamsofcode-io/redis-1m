@@ -7,6 +7,10 @@ terraform {
   }
 }
 
+locals {
+  count = 15
+}
+
 # Configure the Digital Ocean Provider
 provider "digitalocean" {
   token = var.do_token
@@ -33,7 +37,7 @@ variable "region" {
 variable "droplet_size" {
   description = "Droplet size (with 2 vCPUs)"
   type        = string
-  default     = "s-2vcpu-2gb"
+  default     = "g-2vcpu-8gb-intel"
 }
 
 # Get SSH key data
@@ -49,8 +53,9 @@ resource "digitalocean_vpc" "valkey_vpc" {
 }
 
 resource "digitalocean_droplet" "memtier_node" {
+  count              = 2
   name               = "valkey-benchmark"
-  size               = "s-4vcpu-8gb"
+  size               = "c-32-intel"
   image              = "ubuntu-24-04-x64"
   region             = var.region
   vpc_uuid           = digitalocean_vpc.valkey_vpc.id
@@ -66,7 +71,7 @@ resource "digitalocean_droplet" "memtier_node" {
 
 # Create three droplets
 resource "digitalocean_droplet" "valkey_nodes" {
-  count              = 3
+  count              = local.count
   name               = "valkey-node-${count.index + 1}"
   size               = var.droplet_size
   image              = "ubuntu-24-04-x64"
@@ -77,8 +82,8 @@ resource "digitalocean_droplet" "valkey_nodes" {
   # Setup script
   user_data = templatefile("${path.module}/setup.tpl", {
     node_index = count.index
-    node_count = 3
-    node_ips = ["10.10.10.2:6379", "10.10.10.3:6379", "10.10.10.4:6379"]
+    node_count = local.count
+    node_ips   = [for i in range(local.count) : "10.10.10.${i + 2}:6379"]
   })
 }
 
@@ -92,7 +97,7 @@ output "valkey_node_private_ips" {
 }
 
 output "memtier" {
-  value = digitalocean_droplet.memtier_node.ipv4_address
+  value = digitalocean_droplet.memtier_node[*].ipv4_address
 }
 
 output "valkey_cluster_info" {
