@@ -1,5 +1,10 @@
 #!/bin/bash
 
+echo "* soft nofile 32768" >> /etc/security/limits.conf
+echo "* hard nofile 32768" >> /etc/security/limits.conf
+echo "root soft nofile 32768" >> /etc/security/limits.conf
+echo "root hard nofile 32768" >> /etc/security/limits.conf
+
 # Detect private IP
 PRIVATE_IP=$(hostname -I | awk '{print $1}')
 echo "Setting up Valkey node ${node_index + 1} with detected private IP $PRIVATE_IP"
