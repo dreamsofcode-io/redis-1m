@@ -1,9 +1,6 @@
 #!/bin/bash
 
-echo "* soft nofile 32768" >> /etc/security/limits.conf
-echo "* hard nofile 32768" >> /etc/security/limits.conf
-echo "root soft nofile 32768" >> /etc/security/limits.conf
-echo "root hard nofile 32768" >> /etc/security/limits.conf
+echo "* soft nofile 40000" >> /etc/security/limits.conf
 
 # Detect private IP
 PRIVATE_IP=$(hostname -I | awk '{print $1}')
@@ -46,7 +43,6 @@ protected-mode no
 cluster-enabled yes
 cluster-config-file /etc/valkey/nodes.conf
 cluster-node-timeout 5000
-appendonly yes
 EOF
 
 # Create log directory

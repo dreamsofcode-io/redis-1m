@@ -32,7 +32,7 @@ variable "ssh_key_name" {
 variable "server_type" {
   description = "Hetzner Cloud server type"
   type        = string
-  default     = "ccx23"  # 2 vCPUs, 4GB RAM - adjust as needed for bigger CPU
+  default     = "cpx21"  # 2 vCPUs, 4GB RAM - adjust as needed for bigger CPU
 }
 
 variable "location" {

@@ -75,7 +75,6 @@ protected-mode no
 cluster-enabled yes
 cluster-config-file /etc/valkey/$PORT/nodes.conf
 cluster-node-timeout 5000
-appendonly yes
 EOF
 
   # Set up systemd service

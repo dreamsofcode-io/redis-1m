@@ -53,7 +53,7 @@ resource "digitalocean_vpc" "valkey_vpc" {
 }
 
 resource "digitalocean_droplet" "memtier_node" {
-  count              = 2
+  count              = 1
   name               = "valkey-benchmark"
   size               = "c-32-intel"
   image              = "ubuntu-24-04-x64"
